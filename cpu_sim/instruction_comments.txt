@@ -1,0 +1,62 @@
+minisys instructions:
+=========================================================================
+TYPE1:add,addu,addi,addiu,sub,subu
+NOTE:
+ADD  rd, rs, rt
+(rd)←(rs) + (rt)
+
+ADDU  rd, rs, rt 
+(rd)←(rs) + (rt) 
+
+ADDI  rt, rs, immediate
+(rt)←(rs) + (Sign-Extend)immediate
+
+AND  rd, rs, rt
+(rd)←(rs) AND (rt) 
+
+ANDI  rt, rs, immediate
+(rt)←(rs) AND (Zero-Extend)immediate
+=========================================================================
+TYPE2:and,andi,or,ori,xor,xori,nor,sll,srl,sra,sllv,srlv,srav
+NOTE:
+SLLV  rd, rt, rs
+(rd)←(rt)<<(rs)
+
+SRLV  rd, rt, rs
+(rd)←(rt)>>(rs) 
+=========================================================================
+TYPE3:lw,sw,lui
+NOTE:
+LW  rt, offset(rs)
+(rt)←Memory[(rs)+(sign_extend)offset] 
+SW  rt, offset(rs)
+Memory[(rs)+(sign_extend)offset]←(rt)
+LUI  rt, immediate
+(rt)←immediate<<16 & 0FFFF0000H
+=========================================================================
+TYPE4:beq,bne,slt,slti,sltu,sltiu
+NOTE:
+BEQ  rt, rs, immediate
+offset = immediate/4
+if ((rt)=(rs)) then (PC)←(PC)+4+( (Sign-Extend) offset<<2)
+
+SLT  rd, rs, rt
+if ((rs)<(rt)) then (rd)←1; else (rd)←0;
+
+SLTI  rt, rs, immediate
+if ((rs)<(Sign-Extend)immediate) then (rt)←1; else (rt)←0;
+=========================================================================
+TYPE5:j,jr,jal
+NOTE:
+JAL  target
+address = target/4
+($31)←(PC)+4
+(PC)←( (Zero-Extend) address<<2)
+
+J  target
+address = target/4
+(PC)←( (Zero-Extend) address<<2) 
+
+JR  rs
+(PC)←(rs)
+========================================================================= 

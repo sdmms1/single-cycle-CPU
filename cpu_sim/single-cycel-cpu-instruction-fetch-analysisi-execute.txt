@@ -1,0 +1,50 @@
+jr，jal，branch， sw，R， lw
+
+1. jr
+fetch(read instruction) -> decoder(read $31) -> fetch(update PC)
+fetch(read instruction)  @ clk_posedge
+decoder(read $31) : combinational logic
+fetch(update PC) @ clk_negedge
+
+2. jal ( jump {pc,instruction} : fetch)
+fetch(read instruction) -> decoder(pc+4 write to $31)
+                        ->{pc,instruction} -> fetch(update PC)
+						
+fetch(read instruction)  @ clk1_posedge
+fetch(update PC) @ clk1_negedge	
+decoder(pc+4 write to $31) @ clk2_posedge 
+
+3. branch
+fetch(read instruction)->decoder(signed-extend-immediate) -> alu(pc+4+offset) -> fetch(update PC)	
+fetch(read instruction)  @ clk_posedge
+decoder(signed-extend-immedite)  : combinational logic
+alu (pc+4+offset)  : combinational logic
+fetch(update PC) @ clk_negedge		
+
+4. sw
+fetch(read instruction)->decoder(read regiseter,signed-extend-immedite )-> alu(calculate address) -> memory(write)	
+fetch(read instruction)  @ clk_posedge
+decoder(signed-extend-immedite)   : combinational logic
+alu(calculate address) : combinational logic
+memory(write) -> @ clk_negedge
+
+5. R-type
+fetch(read instruction)-> decoder(read rs，rt）-》alu -> decoder(write rd)
+fetch(read instruction)  @ clk1_posedge
+decoder(read rs，rt）: combinational logic
+alu: combinational logic
+decoder(write rd) @ clk2_posedge
+
+6. lw
+fetch(read instruction)-> decoder(read address,signed-extend-immedite )-> alu(address) -> memory(read) ->decoder(write)
+fetch(read instruction)-> decoder(read rs，rt)-》alu -> decoder(write rd)
+fetch(read instruction)  @ clk1_posedge
+decoder(read rs，rt）: combinational logic
+alu : combinational logic
+memory read @ clk1_negedge
+decoder(write rd) @ clk2_posedge
+
+====confilct or not?========================
+decoder write flip-flop (faster)
+fetch use  ip-core (slower)
+
